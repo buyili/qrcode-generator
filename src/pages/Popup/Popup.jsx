@@ -88,8 +88,10 @@ const Popup = () => {
           </div>
         </div>
 
+        <div className="divider"></div>
+
         {/* ip地址 */}
-        <div className='mt20'>
+        <div>
           IPv4地址：
           <CopyToClipboard text={ip} onCopy={() => {
             setCopied(true)
