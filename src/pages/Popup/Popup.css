@@ -32,6 +32,7 @@
 
 .activetab-url {
   margin-bottom: 8px;
+  font-size: calc(8px + 2vmin);
 }
 
 .qrcode {

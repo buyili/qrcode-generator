@@ -70,8 +70,8 @@ const Popup = () => {
 
       <div className='App-body'>
 
-        <div className='activetab-title'>{activeTab.title}</div>
-        <div className='activetab-url'>{activeTab.url}</div>
+        <div className='ellipsis activetab-title'>{activeTab.title}</div>
+        <div className='ellipsis activetab-url'>{activeTab.url}</div>
 
         <div className='qrcode-container'>
           <img className='qrcode' src={activeTab.urlQrcode ?? qrcodePlaceholder} alt={activeTab.url} />
