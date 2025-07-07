@@ -27,14 +27,7 @@
 
 .qrcode-container {
   display: flex;
-}
-
-.qrcode-container>img {
-  flex: 4;
-}
-
-.qrcode-container>.space {
-  flex: 2;
+  justify-content: space-between;
 }
 
 .activetab-url {
@@ -42,7 +35,9 @@
 }
 
 .qrcode {
-  width: 100%;
+  width: 172px;
+  height: auto;
+  background-color: white;
 }
 
 .clipboard {

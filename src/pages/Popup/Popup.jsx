@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../../assets/img/logo.svg';
-import Greetings from '../../containers/Greetings/Greetings';
+import qrcodePlaceholder from '../../assets/img/qrcode-placeholder.svg'
 import './Popup.css';
 import QRCode from 'qrcode';
 import CurrentIPUtil from '../../utils/CurrentIPUtil';
@@ -10,13 +9,13 @@ const Popup = () => {
   const [activeTab, setActiveTab] = useState({
     title: '',
     url: '',
-    urlQrcode: '',
+    urlQrcode: null,
   })
   const [ip, setIp] = useState('')
   const [copied, setCopied] = useState(false)
   const [inputQrcode, setInputQrcode] = useState({
     input: '',
-    qrcode: '',
+    qrcode: null,
   })
 
   useEffect(() => {
@@ -75,9 +74,9 @@ const Popup = () => {
         <div className='activetab-url'>{activeTab.url}</div>
 
         <div className='qrcode-container'>
-          <img className='qrcode' src={activeTab.urlQrcode} alt={activeTab.title} />
+          <img className='qrcode' src={activeTab.urlQrcode ?? qrcodePlaceholder} alt={activeTab.url} />
           <div className='space'></div>
-          <img className="qrcode" src={inputQrcode.qrcode}></img>
+          <img className="qrcode" src={inputQrcode.qrcode ?? qrcodePlaceholder} alt={inputQrcode.input} ></img>
         </div>
 
         <div className='text-right mt8'>
