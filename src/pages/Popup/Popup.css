@@ -1,10 +1,4 @@
 .App {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  text-align: center;
   height: 100%;
   padding: 10px;
   background-color: #282c34;
@@ -21,12 +15,8 @@
   }
 }
 
-.App-header {
+.App-body {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -35,10 +25,41 @@
   color: #61dafb;
 }
 
+.qrcode-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.activetab-url {
+  margin-bottom: 8px;
+  font-size: calc(8px + 2vmin);
+}
+
+.qrcode {
+  width: 172px;
+  height: auto;
+  background-color: white;
+}
+
+.clipboard {
+  cursor: pointer;
+}
+
+.clipboard:hover {
+  color: #61dafb;
+}
+
+.divider {
+  margin: 24px 0;
+  height: 1px;
+  background-color: gray;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
