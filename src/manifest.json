@@ -1,5 +1,4 @@
 {
-  "version": "1.0.0",
   "manifest_version": 3,
   "name": "QR Code Generator",
   "description": "A chrome extension for generate QR code.",
