@@ -49,17 +49,19 @@ const Popup = () => {
   }, [])
 
   useEffect(() => {
-    QRCode.toDataURL(inputQrcode.input)
-      .then(url => {
-        console.log(url)
-        setInputQrcode({
-          ...inputQrcode,
-          qrcode: url,
+    if (inputQrcode.input) {
+      QRCode.toDataURL(inputQrcode.input)
+        .then(url => {
+          console.log(url)
+          setInputQrcode({
+            ...inputQrcode,
+            qrcode: url,
+          })
         })
-      })
-      .catch(err => {
-        console.error(err)
-      })
+        .catch(err => {
+          console.error(err)
+        })
+    }
   }, [inputQrcode.input])
 
   return (
