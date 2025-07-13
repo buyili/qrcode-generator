@@ -39,6 +39,22 @@
   width: 172px;
   height: auto;
   background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 0 4px 0 rgba(255, 254, 254, 0.2);
+}
+
+.clear-btn {
+  margin-right: 12px;
+  font-size: calc(6px + 2vmin);
+  color: #61dafb;
+  cursor: pointer;
+}
+
+.input {
+  min-width: 100%;
+  max-width: 100%;
+  margin-top: 4px;
+  padding: 10px 12px;
 }
 
 .clipboard {

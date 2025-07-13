@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import qrcodePlaceholder from '../../assets/img/qrcode-placeholder.svg'
 import './Popup.css';
 import QRCode from 'qrcode';
@@ -17,6 +17,7 @@ const Popup = () => {
     input: '',
     qrcode: null,
   })
+  const inputRef = useRef(null)
 
   useEffect(() => {
     chrome.storage.local.get(['selectedText'], (result) => {
@@ -75,6 +76,14 @@ const Popup = () => {
     }
   }, [inputQrcode.input])
 
+  function clearInput() {
+    setInputQrcode({
+      input: '',
+      qrcode: null,
+    })
+    inputRef.current.focus()
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -93,10 +102,17 @@ const Popup = () => {
         </div>
 
         <div className='text-right mt8'>
-          <div>文本转二维码:</div>
+          <div>
+            <span className='clear-btn' onClick={clearInput}>清空输入框</span>
+            文本转二维码:
+          </div>
           <div className="input-group">
-            <label>请输入文本：</label>
-            <input type="text" value={inputQrcode.input} onChange={(e) => setInputQrcode({ input: e.target.value })}></input>
+            <textarea className='input' type="text"
+              placeholder='请输入文本'
+              ref={inputRef}
+              value={inputQrcode.input}
+              onChange={(e) => setInputQrcode({ input: e.target.value })}
+            ></textarea>
           </div>
         </div>
 
