@@ -19,6 +19,17 @@ const Popup = () => {
   })
 
   useEffect(() => {
+    chrome.storage.local.get(['selectedText'], (result) => {
+      const selectedText = result.selectedText || '';
+
+      setInputQrcode({
+        ...inputQrcode,
+        input: selectedText
+      })
+
+      // 清除临时存储的数据（可选）
+      chrome.storage.local.remove('selectedText');
+    });
 
     // 显示当前标签页地址的二维码
     chrome.tabs.query({ active: true, currentWindow: true }, ([activeTab]) => {
