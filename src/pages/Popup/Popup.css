@@ -44,9 +44,6 @@
 }
 
 .clear-btn {
-  margin-right: 12px;
-  font-size: calc(6px + 2vmin);
-  color: #61dafb;
   cursor: pointer;
 }
 

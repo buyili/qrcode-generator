@@ -4,6 +4,9 @@ import './Popup.css';
 import QRCode from 'qrcode';
 import CurrentIPUtil from '../../utils/CurrentIPUtil';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames';
 
 const Popup = () => {
   const [activeTab, setActiveTab] = useState({
@@ -18,6 +21,8 @@ const Popup = () => {
     qrcode: null,
   })
   const inputRef = useRef(null)
+
+  var xmarkIconClass = classNames({ 'clear-btn': true, 'opacity-20': !inputQrcode.input })
 
   useEffect(() => {
     chrome.storage.local.get(['selectedText'], (result) => {
@@ -101,9 +106,9 @@ const Popup = () => {
           <img className="qrcode" src={inputQrcode.qrcode ?? qrcodePlaceholder} alt={inputQrcode.input} ></img>
         </div>
 
-        <div className='text-right mt8'>
-          <div>
-            <span className='clear-btn' onClick={clearInput}>清空输入框</span>
+        <div className='mt8'>
+          <div className='flex items-end justify-between'>
+            <FontAwesomeIcon className={xmarkIconClass} icon={faXmark} onClick={clearInput}></FontAwesomeIcon>
             文本转二维码:
           </div>
           <div className="input-group">
