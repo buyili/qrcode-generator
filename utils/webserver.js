@@ -6,6 +6,7 @@ process.env.ASSET_PATH = '/';
 var WebpackDevServer = require('webpack-dev-server'),
   webpack = require('webpack'),
   config = require('../webpack.config'),
+  notReloadConfig = require('../webpack.config.notreload'),
   env = require('./env'),
   path = require('path');
 
@@ -27,7 +28,6 @@ var compiler = webpack(config);
 
 var server = new WebpackDevServer(
   {
-    https: false,
     hot: true,
     liveReload: false,
     client: {
@@ -53,4 +53,11 @@ var server = new WebpackDevServer(
 
 (async () => {
   await server.start();
+
+  webpack({
+    ...notReloadConfig,
+    watch: true
+  }, function (err, stats) {
+    if (err) throw err;
+  });
 })();
