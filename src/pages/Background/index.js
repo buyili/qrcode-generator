@@ -1,72 +1,45 @@
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create({
-        id: "createQRCodeForPage",
-        title: "为此页面创建二维码",
-        contexts: ["page"]
-    });
+    console.log("🚀 ~ chrome.runtime.onInstalled.addListener ~ runtime:", Date.now())
+
+    // 菜单配置数组
+    const menuItems = [
+        { id: "createQRCodeForPage", title: "为此页面创建二维码", contexts: ["page"] },
+        { id: "createQRCodeForSelecton", title: "为选中文本创建二维码", contexts: ["selection"] },
+        { id: "createQRCodeForLink", title: "为链接创建二维码", contexts: ["link"] },
+        { id: "createQRCodeForImage", title: "为图片链接创建二维码", contexts: ["image"] },
+        { id: "createQRCodeForVideo", title: "为视频链接创建二维码", contexts: ["video"] },
+    ];
+
+    // 批量创建菜单
+    menuItems.forEach(item => chrome.contextMenus.create(item));
 });
 
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create({
-        id: "createQRCodeForSelecton",
-        title: "为选中文本创建二维码",
-        contexts: ["selection"]
-    });
-});
-
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create({
-        id: "createQRCodeForLink",
-        title: "为链接创建二维码",
-        contexts: ["link"]
-    });
-});
-
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create({
-        id: "createQRCodeForImage",
-        title: "为图片链接创建二维码",
-        contexts: ["image"]
-    });
-});
-
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create({
-        id: "createQRCodeForVideo",
-        title: "为视频链接创建二维码",
-        contexts: ["video"]
-    });
-});
-
-// Listen for clicks
+// 统一处理菜单点击事件
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-    console.log("🚀 ~ chrome.contextMenus.onClicked.addListener ~ info:", info)
+    console.log("🚀 ~ 菜单点击信息:", info);
+
     if (info.menuItemId === "createQRCodeForPage") {
         chrome.action.openPopup();
+        return;
     }
-    else if (info.menuItemId === "createQRCodeForSelecton") {
-        if (info.selectionText) {
-            console.log("Selected text: " + info.selectionText);
-            chrome.storage.local.set({ selectedText: info.selectionText }, () => {
-                chrome.action.openPopup();
-            });
-        } else {
-            console.log("No text selected.");
-        }
-    }
-    else if (info.menuItemId === "createQRCodeForLink") {
-        chrome.storage.local.set({ selectedText: info.linkUrl }, () => {
+
+    // 根据菜单ID映射需要存储的数据
+    const dataMap = {
+        createQRCodeForSelecton: info.selectionText,
+        createQRCodeForLink: info.linkUrl,
+        createQRCodeForImage: info.srcUrl,
+        createQRCodeForVideo: info.srcUrl
+    };
+
+    // 获取当前需要处理的数据
+    const content = dataMap[info.menuItemId];
+
+    // 只有存在有效内容时才执行操作
+    if (content) {
+        chrome.storage.local.set({ selectedText: content }, () => {
             chrome.action.openPopup();
         });
-    }
-    else if (info.menuItemId === "createQRCodeForImage") {
-        chrome.storage.local.set({ selectedText: info.srcUrl }, () => {
-            chrome.action.openPopup();
-        });
-    }
-    else if (info.menuItemId === "createQRCodeForVideo") {
-        chrome.storage.local.set({ selectedText: info.srcUrl }, () => {
-            chrome.action.openPopup();
-        });
+    } else {
+        console.log("没有可处理的内容");
     }
 });
