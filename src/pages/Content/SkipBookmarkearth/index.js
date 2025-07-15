@@ -1,5 +1,6 @@
 
-import { storageKeys } from '../../../utils/const';
+import { storageKeys, assets } from '../../../utils/const';
+const logo = assets.logo;
 
 function createJumpBtn() {
     const link = document.getElementsByClassName('link')[0]
@@ -13,6 +14,16 @@ function createJumpBtn() {
     eleA.style.cssText = `
     margin-left: 10px;
     `;
+
+    const eleImg = document.createElement('img');
+    eleImg.src = logo;
+    eleImg.style.cssText = `
+    width: 12px;
+    height: 12px;
+    margin-right: 2px;
+    vertical-align: baseline;
+    `;
+    eleA.prepend(eleImg);
 
     link.append(eleA)
 }
