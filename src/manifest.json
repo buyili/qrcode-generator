@@ -19,7 +19,7 @@
         "https://www.bookmarkearth.cn/view/*"
       ],
       "js": [
-        "contentSkipBookmarkearchScript.bundle.js"
+        "contentSkipBookmarkearthScript.bundle.js"
       ]
     },
     {

@@ -40,7 +40,7 @@ var options = {
   entry: {
     background: path.join(__dirname, 'src', 'pages', 'Background', 'index.js'),
     contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.js'),
-    contentSkipBookmarkearchScript: path.join(__dirname, 'src', 'pages', 'Content', 'SkipBookmarkearch', 'index.js'),
+    contentSkipBookmarkearthScript: path.join(__dirname, 'src', 'pages', 'Content', 'SkipBookmarkearth', 'index.js'),
   },
   output: {
     filename: '[name].bundle.js',
