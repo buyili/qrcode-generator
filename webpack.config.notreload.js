@@ -38,6 +38,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 var options = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
+    background: path.join(__dirname, 'src', 'pages', 'Background', 'index.js'),
     contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.js'),
     contentSkipBookmarkearchScript: path.join(__dirname, 'src', 'pages', 'Content', 'SkipBookmarkearch', 'index.js'),
   },
