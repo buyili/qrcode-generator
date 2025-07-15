@@ -7,6 +7,7 @@ var webpack = require('webpack'),
   path = require('path'),
   fs = require('fs'),
   config = require('../webpack.config'),
+  notReloadConfig = require('../webpack.config.notreload'),
   ZipPlugin = require('zip-webpack-plugin');
 
 delete config.chromeExtensionBoilerplate;
@@ -21,6 +22,13 @@ config.plugins = (config.plugins || []).concat(
     path: path.join(__dirname, '../', 'zip'),
   })
 );
+
+config.entry = {
+  ...config.entry,
+  ...notReloadConfig.entry
+}
+
+config.output.clean = true;
 
 webpack(config, function (err) {
   if (err) throw err;

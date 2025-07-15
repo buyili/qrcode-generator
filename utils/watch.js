@@ -10,24 +10,24 @@ var webpack = require('webpack'),
 
 delete config.chromeExtensionBoilerplate;
 
-// webpack({
-//   ...config,
-//   watch: true
-// }, function (err) {
-//   if (err) throw err;
-
-//   webpack({
-//     ...configNotReload,
-//     watch: true
-//   }, function (err, stats) {
-//     if (err) throw err;
-//   });
-// });
-
-
 webpack({
-  ...configNotReload,
+  ...config,
   watch: true
-}, function (err, stats) {
+}, function (err) {
   if (err) throw err;
+
+  webpack({
+    ...configNotReload,
+    watch: true
+  }, function (err, stats) {
+    if (err) throw err;
+  });
 });
+
+
+// webpack({
+//   ...configNotReload,
+//   watch: true
+// }, function (err, stats) {
+//   if (err) throw err;
+// });
