@@ -54,7 +54,7 @@ function toggleLink() {
 }
 
 chrome.storage.local.get([storageKeys.autoSkipBookmarkearthExternalLinkVerification], (result) => {
-    const autoSkip = result[storageKeys.autoSkipBookmarkearthExternalLinkVerification] || true;
+    const autoSkip = result[storageKeys.autoSkipBookmarkearthExternalLinkVerification];
 
     createJumpBtn();
 
