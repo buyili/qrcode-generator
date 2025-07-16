@@ -1,4 +1,5 @@
 
+import './index.scss';
 import { storageKeys, assets } from '../../../utils/const';
 const logo = assets.logo;
 
@@ -25,22 +26,16 @@ function createJumpBtn() {
         return;
     }
 
+    // 创建跳转按钮
     const eleA = document.createElement('a');
+    eleA.className = 'qrcodeg-jump-btn';
     eleA.href = linkUrl;
     eleA.innerHTML = '跳转';
-    eleA.style.cssText = `
-    margin-left: 10px;
-    `;
     link.append(eleA)
 
     const eleImg = document.createElement('img');
+    eleImg.className = 'qrcodeg-jump-btn-logo';
     eleImg.src = logo;
-    eleImg.style.cssText = `
-    width: 12px;
-    height: 12px;
-    margin-right: 2px;
-    vertical-align: baseline;
-    `;
     eleA.prepend(eleImg);
 
 }
