@@ -43,3 +43,19 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         console.log("没有可处理的内容");
     }
 });
+
+
+// 拦截 https://akuma.moe/ 网站换页时的广告弹窗
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    // console.log("🚀 ~ chrome.tabs.onUpdated.addListener ~ tabId, changeInfo, tab:", tabId, changeInfo, tab)
+    if (tab.height == 99) {
+        chrome.tabs.remove(tab.id);
+    }
+});
+
+chrome.tabs.onCreated.addListener((tab) => {
+    // console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
+    if (tab.height == 99) {
+        chrome.tabs.remove(tab.id);
+    }
+})
