@@ -1,5 +1,7 @@
+import { dayFormat } from '../../utils/day_format';
+
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("🚀 ~ chrome.runtime.onInstalled.addListener ~ runtime:", Date.now())
+    console.log("🚀 ~ chrome.runtime.onInstalled.addListener ~ run at:", dayFormat())
 
     // 菜单配置数组
     const menuItems = [
