@@ -46,18 +46,31 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     }
 });
 
+/**
+ * 拦截在新建窗口中打开的广告
+ * @param {chrome.tabs.Tab} tab 
+ */
+function blockNewWindowAD(tab) {
+    // 判断 newWindowAD 方式一：窗口高度等于 99
+    if (tab.height == 99) {
+        chrome.tabs.remove(tab.id);
+        return
+    }
+    // 判断 newWindowAD 方式二：新建窗口时 tab.pendingUrl 属性值为空。
+    // 注意：这只适用于 chrome.tabs.onCreated 事件，不适用于 chrome.tabs.onUpdated 事件
+    if (!tab.pendingUrl) {
+        chrome.tabs.remove(tab.id)
+        return
+    }
+}
+
 
 // 拦截 https://akuma.moe/ 网站换页时的广告弹窗
+chrome.tabs.onCreated.addListener((tab) => {
+    console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
+    blockNewWindowAD(tab)
+})
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // console.log("🚀 ~ chrome.tabs.onUpdated.addListener ~ tabId, changeInfo, tab:", tabId, changeInfo, tab)
-    if (tab.height == 99) {
-        chrome.tabs.remove(tab.id);
-    }
 });
-
-chrome.tabs.onCreated.addListener((tab) => {
-    // console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
-    if (tab.height == 99) {
-        chrome.tabs.remove(tab.id);
-    }
-})
