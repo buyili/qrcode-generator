@@ -58,7 +58,8 @@ function blockNewWindowAD(tab) {
     }
     // 判断 newWindowAD 方式二：新建窗口时 tab.pendingUrl 属性值为空。
     // 注意：这只适用于 chrome.tabs.onCreated 事件，不适用于 chrome.tabs.onUpdated 事件
-    if (!tab.pendingUrl) {
+    // 根据 tab.active 是否为 true 区分广告。例如第三方网站(如 x.com)使用google账号登录时，弹窗标签信息中 tab.active = true
+    if (!tab.pendingUrl && tab.active == false) {
         chrome.tabs.remove(tab.id)
         return
     }
@@ -67,7 +68,7 @@ function blockNewWindowAD(tab) {
 
 // 拦截 https://akuma.moe/ 网站换页时的广告弹窗
 chrome.tabs.onCreated.addListener((tab) => {
-    console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
+    // console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
     blockNewWindowAD(tab)
 })
 
