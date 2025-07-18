@@ -1,5 +1,7 @@
 import { dayFormat } from '../../utils/day_format';
 
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
 chrome.runtime.onInstalled.addListener(() => {
     console.log("🚀 ~ chrome.runtime.onInstalled.addListener ~ run at:", dayFormat())
 
@@ -12,6 +14,8 @@ chrome.runtime.onInstalled.addListener(() => {
         { id: "createQRCodeForVideo", title: "为视频链接创建二维码", contexts: ["video"] },
     ];
 
+    if (isDevelopment) menuItems.push({ id: "clearBackgroundConsoleLog", title: "清理 background 日志", contexts: ["all"] })
+
     // 批量创建菜单
     menuItems.forEach(item => chrome.contextMenus.create(item));
 });
@@ -23,6 +27,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId === "createQRCodeForPage") {
         chrome.action.openPopup();
         return;
+    }
+
+    if (info.menuItemId == 'clearBackgroundConsoleLog') {
+        console.clear()
+        return true;
     }
 
     // 根据菜单ID映射需要存储的数据
@@ -42,7 +51,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             chrome.action.openPopup();
         });
     } else {
-        console.log("没有可处理的内容");
+        console.log("🚀 ~ 菜单点击: 没有可处理的内容");
     }
 });
 
@@ -75,3 +84,17 @@ chrome.tabs.onCreated.addListener((tab) => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // console.log("🚀 ~ chrome.tabs.onUpdated.addListener ~ tabId, changeInfo, tab:", tabId, changeInfo, tab)
 });
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log(sender.tab ?
+        "from a content script:" + sender.tab.url :
+        "from the extension");
+
+    if (message == 'clearlog') {
+        console.clear()
+        sendResponse('success')
+        return true
+    }
+
+    return true
+})
