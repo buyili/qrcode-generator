@@ -84,17 +84,3 @@ chrome.tabs.onCreated.addListener((tab) => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // console.log("🚀 ~ chrome.tabs.onUpdated.addListener ~ tabId, changeInfo, tab:", tabId, changeInfo, tab)
 });
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log(sender.tab ?
-        "from a content script:" + sender.tab.url :
-        "from the extension");
-
-    if (message == 'clearlog') {
-        console.clear()
-        sendResponse('success')
-        return true
-    }
-
-    return true
-})
