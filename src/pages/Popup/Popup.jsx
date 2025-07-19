@@ -42,8 +42,10 @@ const Popup = () => {
       setActiveTab({
         title: activeTab.title,
         url: activeTab.url,
-        urlQrcode: ''
+        urlQrcode: null
       })
+
+      if (!activeTab.url) return
 
       QRCode.toDataURL(activeTab.url)
         .then(url => {
