@@ -3,12 +3,8 @@ var webpack = require('webpack'),
   fileSystem = require('fs-extra'),
   env = require('./utils/env'),
   CopyWebpackPlugin = require('copy-webpack-plugin'),
-  HtmlWebpackPlugin = require('html-webpack-plugin'),
   TerserPlugin = require('terser-webpack-plugin');
-var { CleanWebpackPlugin } = require('clean-webpack-plugin');
-var ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 var ReactRefreshTypeScript = require('react-refresh-typescript');
-var notreloadConfig = require('./webpack.config.notreload');
 
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
@@ -36,28 +32,17 @@ if (fileSystem.existsSync(secretsPath)) {
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-const notReload = Object.keys(notreloadConfig.entry);
-
 var options = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
-    newtab: path.join(__dirname, 'src', 'pages', 'Newtab', 'index.jsx'),
-    options: path.join(__dirname, 'src', 'pages', 'Options', 'index.jsx'),
-    popup: path.join(__dirname, 'src', 'pages', 'Popup', 'index.jsx'),
-    devtools: path.join(__dirname, 'src', 'pages', 'Devtools', 'index.js'),
-    panel: path.join(__dirname, 'src', 'pages', 'Panel', 'index.jsx'),
-  },
-  chromeExtensionBoilerplate: {
-    notHotReload: ['background', 'contentScript', 'devtools'],
+    background: path.join(__dirname, 'src', 'pages', 'Background', 'index.js'),
+    contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.js'),
+    contentSkipBookmarkearthScript: path.join(__dirname, 'src', 'pages', 'Content', 'SkipBookmarkearth', 'index.js'),
   },
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'build'),
-    clean: {
-      keep(asset) {
-        return notReload.filter(keep => asset.includes(keep)).length > 0;
-      },
-    },
+    clean: false,
     publicPath: ASSET_PATH,
   },
   module: {
@@ -138,30 +123,9 @@ var options = {
       .concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
   },
   plugins: [
-    isDevelopment && new ReactRefreshWebpackPlugin(),
-    // new CleanWebpackPlugin({ verbose: false }), // 使用 output.clean 实现部分文件不删除，CleanWebpackPlugin不能实现这个功能！！！
     new webpack.ProgressPlugin(),
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/manifest.json',
-          to: path.join(__dirname, 'build'),
-          force: true,
-          transform: function (content, path) {
-            // generates the manifest file using the package.json informations
-            return Buffer.from(
-              JSON.stringify({
-                description: process.env.npm_package_description,
-                version: process.env.npm_package_version,
-                ...JSON.parse(content.toString()),
-              })
-            );
-          },
-        },
-      ],
-    }),
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -170,54 +134,6 @@ var options = {
           force: true,
         },
       ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/assets/img/icon-128.png',
-          to: path.join(__dirname, 'build'),
-          force: true,
-        },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/assets/img/icon-34.png',
-          to: path.join(__dirname, 'build'),
-          force: true,
-        },
-      ],
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'pages', 'Newtab', 'index.html'),
-      filename: 'newtab.html',
-      chunks: ['newtab'],
-      cache: false,
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'pages', 'Options', 'index.html'),
-      filename: 'options.html',
-      chunks: ['options'],
-      cache: false,
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'pages', 'Popup', 'index.html'),
-      filename: 'popup.html',
-      chunks: ['popup'],
-      cache: false,
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'pages', 'Devtools', 'index.html'),
-      filename: 'devtools.html',
-      chunks: ['devtools'],
-      cache: false,
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'pages', 'Panel', 'index.html'),
-      filename: 'panel.html',
-      chunks: ['panel'],
-      cache: false,
     }),
   ].filter(Boolean),
   infrastructureLogging: {

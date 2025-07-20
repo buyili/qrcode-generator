@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import qrcodePlaceholder from '../../assets/img/qrcode-placeholder.svg'
 import './Popup.css';
 import QRCode from 'qrcode';
 import CurrentIPUtil from '../../utils/CurrentIPUtil';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames';
 
 const Popup = () => {
   const [activeTab, setActiveTab] = useState({
@@ -17,16 +20,32 @@ const Popup = () => {
     input: '',
     qrcode: null,
   })
+  const inputRef = useRef(null)
+
+  var xmarkIconClass = classNames({ 'clear-btn': true, 'opacity-20': !inputQrcode.input })
 
   useEffect(() => {
+    chrome.storage.local.get(['selectedText'], (result) => {
+      const selectedText = result.selectedText || '';
+
+      setInputQrcode({
+        ...inputQrcode,
+        input: selectedText
+      })
+
+      // 清除临时存储的数据（可选）
+      chrome.storage.local.remove('selectedText');
+    });
 
     // 显示当前标签页地址的二维码
     chrome.tabs.query({ active: true, currentWindow: true }, ([activeTab]) => {
       setActiveTab({
         title: activeTab.title,
         url: activeTab.url,
-        urlQrcode: ''
+        urlQrcode: null
       })
+
+      if (!activeTab.url) return
 
       QRCode.toDataURL(activeTab.url)
         .then(url => {
@@ -49,18 +68,28 @@ const Popup = () => {
   }, [])
 
   useEffect(() => {
-    QRCode.toDataURL(inputQrcode.input)
-      .then(url => {
-        console.log(url)
-        setInputQrcode({
-          ...inputQrcode,
-          qrcode: url,
+    if (inputQrcode.input) {
+      QRCode.toDataURL(inputQrcode.input)
+        .then(url => {
+          console.log(url)
+          setInputQrcode({
+            ...inputQrcode,
+            qrcode: url,
+          })
         })
-      })
-      .catch(err => {
-        console.error(err)
-      })
+        .catch(err => {
+          console.error(err)
+        })
+    }
   }, [inputQrcode.input])
+
+  function clearInput() {
+    setInputQrcode({
+      input: '',
+      qrcode: null,
+    })
+    inputRef.current.focus()
+  }
 
   return (
     <div className="App">
@@ -79,11 +108,18 @@ const Popup = () => {
           <img className="qrcode" src={inputQrcode.qrcode ?? qrcodePlaceholder} alt={inputQrcode.input} ></img>
         </div>
 
-        <div className='text-right mt8'>
-          <div>文本转二维码:</div>
+        <div className='mt8'>
+          <div className='flex items-end justify-between'>
+            <FontAwesomeIcon className={xmarkIconClass} icon={faXmark} onClick={clearInput}></FontAwesomeIcon>
+            文本转二维码:
+          </div>
           <div className="input-group">
-            <label>请输入文本：</label>
-            <input type="text" value={inputQrcode.input} onChange={(e) => setInputQrcode({ input: e.target.value })}></input>
+            <textarea className='input' type="text"
+              placeholder='请输入文本'
+              ref={inputRef}
+              value={inputQrcode.input}
+              onChange={(e) => setInputQrcode({ input: e.target.value })}
+            ></textarea>
           </div>
         </div>
 

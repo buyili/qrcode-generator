@@ -7,6 +7,7 @@ var webpack = require('webpack'),
   path = require('path'),
   fs = require('fs'),
   config = require('../webpack.config'),
+  notReloadConfig = require('../webpack.config.notreload'),
   ZipPlugin = require('zip-webpack-plugin');
 
 delete config.chromeExtensionBoilerplate;
@@ -17,10 +18,17 @@ var packageInfo = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 
 config.plugins = (config.plugins || []).concat(
   new ZipPlugin({
-    filename: `${packageInfo.name}-${packageInfo.version}.zip`,
+    filename: `${packageInfo.name}-v${packageInfo.version}.zip`,
     path: path.join(__dirname, '../', 'zip'),
   })
 );
+
+config.entry = {
+  ...config.entry,
+  ...notReloadConfig.entry
+}
+
+config.output.clean = true;
 
 webpack(config, function (err) {
   if (err) throw err;

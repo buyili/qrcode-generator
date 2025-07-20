@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0",
   "manifest_version": 3,
   "name": "QR Code Generator",
   "description": "A chrome extension for generate QR code.",
+  "options_page": "options.html",
   "background": {
     "service_worker": "background.bundle.js"
   },
@@ -15,6 +15,14 @@
     "128": "icon-128.png"
   },
   "content_scripts": [
+    {
+      "matches": [
+        "https://www.bookmarkearth.cn/view/*"
+      ],
+      "js": [
+        "contentSkipBookmarkearthScript.bundle.js"
+      ]
+    },
     {
       "matches": [
         "http://*/*",
@@ -40,6 +48,8 @@
     }
   ],
   "permissions": [
-    "tabs"
+    "tabs",
+    "contextMenus",
+    "storage"
   ]
 }

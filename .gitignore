@@ -22,3 +22,5 @@
 
 # secrets
 secrets.*.js
+
+copy-script.local.sh
