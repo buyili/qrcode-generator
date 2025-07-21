@@ -77,10 +77,17 @@ function blockNewWindowAD(tab) {
 
 // 拦截 https://akuma.moe/ 网站换页时的广告弹窗
 chrome.tabs.onCreated.addListener((tab) => {
-    // console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
+    console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
     blockNewWindowAD(tab)
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // console.log("🚀 ~ chrome.tabs.onUpdated.addListener ~ tabId, changeInfo, tab:", tabId, changeInfo, tab)
+    console.log("🚀 ~ chrome.tabs.onUpdated.addListener ~ tabId, changeInfo, tab:", tabId, changeInfo, tab)
 });
+
+chrome.windows.onCreated.addListener((window) => {
+    console.log("🚀 ~ chrome.windows.onCreated.addListener ~ window:", window)
+    if (window.top == 0 && window.width / window.left < 0.2) {
+        chrome.windows.remove(window.id)
+    }
+})
