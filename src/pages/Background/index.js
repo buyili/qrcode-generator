@@ -55,6 +55,38 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     }
 });
 
+
+/**
+ * 拦截弹窗广告
+ * 
+ * 
+ * 思路一：广告窗口先是一个小窗口，再打开大窗口，通过判断窗口高度拦截。
+ * 拦截高度等于99的窗口，过几天后发现小窗高度会变化；该方式不完善。
+ * 
+ * 思路二：新建窗口时 tab.pendingUrl 属性值为空。
+ * 注意：这只适用于 chrome.tabs.onCreated 事件，不适用于 chrome.tabs.onUpdated 事件
+ * 根据 tab.active 是否为 true 区分广告。例如第三方网站(如 x.com)使用google账号登录时，弹窗标签信息中 tab.active = true
+ * 
+ * 思路三：完善思路一，根据新开窗口大小拦截；窗口 top=0 并且 width/left<0.2 就拦截。
+ * 
+ * 思路四: 监听窗口创建，同时判断当前活动标签页域名是否匹配，是就拦截，否就放行
+ */
+chrome.tabs.onCreated.addListener((tab) => {
+    console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
+    blockNewWindowAD(tab)
+})
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    console.log("🚀 ~ chrome.tabs.onUpdated.addListener ~ tabId, changeInfo, tab:", tabId, changeInfo, tab)
+});
+
+chrome.windows.onCreated.addListener((window) => {
+    console.log("🚀 ~ chrome.windows.onCreated.addListener ~ window:", window)
+    if (window.top == 0 && window.width / window.left < 0.2) {
+        chrome.windows.remove(window.id)
+    }
+})
+
 /**
  * 拦截在新建窗口中打开的广告
  * @param {chrome.tabs.Tab} tab 
@@ -73,21 +105,3 @@ function blockNewWindowAD(tab) {
         return
     }
 }
-
-
-// 拦截 https://akuma.moe/ 网站换页时的广告弹窗
-chrome.tabs.onCreated.addListener((tab) => {
-    console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
-    blockNewWindowAD(tab)
-})
-
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    console.log("🚀 ~ chrome.tabs.onUpdated.addListener ~ tabId, changeInfo, tab:", tabId, changeInfo, tab)
-});
-
-chrome.windows.onCreated.addListener((window) => {
-    console.log("🚀 ~ chrome.windows.onCreated.addListener ~ window:", window)
-    if (window.top == 0 && window.width / window.left < 0.2) {
-        chrome.windows.remove(window.id)
-    }
-})
