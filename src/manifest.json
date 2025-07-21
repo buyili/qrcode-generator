@@ -22,19 +22,6 @@
       "js": [
         "contentSkipBookmarkearthScript.bundle.js"
       ]
-    },
-    {
-      "matches": [
-        "http://*/*",
-        "https://*/*",
-        "<all_urls>"
-      ],
-      "js": [
-        "contentScript.bundle.js"
-      ],
-      "css": [
-        "content.styles.css"
-      ]
     }
   ],
   "web_accessible_resources": [
