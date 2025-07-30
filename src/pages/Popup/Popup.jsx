@@ -1,24 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react';
-import qrcodePlaceholder from '../../assets/img/qrcode-placeholder.svg'
 import './Popup.css';
-import QRCode from 'qrcode';
 import CurrentIPUtil from '../../utils/CurrentIPUtil';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import QRCodeComp from './components/qrcode';
 
 const Popup = () => {
   const [activeTab, setActiveTab] = useState({
     title: '',
     url: '',
-    urlQrcode: null,
   })
   const [ip, setIp] = useState('')
   const [copied, setCopied] = useState(false)
   const [inputQrcode, setInputQrcode] = useState({
     input: '',
-    qrcode: null,
   })
   const inputRef = useRef(null)
 
@@ -42,22 +39,7 @@ const Popup = () => {
       setActiveTab({
         title: activeTab.title,
         url: activeTab.url,
-        urlQrcode: null
       })
-
-      if (!activeTab.url) return
-
-      QRCode.toDataURL(activeTab.url)
-        .then(url => {
-          console.log(url)
-          setActiveTab({
-            ...activeTab,
-            urlQrcode: url
-          })
-        })
-        .catch(err => {
-          console.error(err)
-        })
     })
 
     // 显示本机ipv4地址
@@ -67,26 +49,9 @@ const Popup = () => {
 
   }, [])
 
-  useEffect(() => {
-    if (inputQrcode.input) {
-      QRCode.toDataURL(inputQrcode.input)
-        .then(url => {
-          console.log(url)
-          setInputQrcode({
-            ...inputQrcode,
-            qrcode: url,
-          })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
-  }, [inputQrcode.input])
-
   function clearInput() {
     setInputQrcode({
       input: '',
-      qrcode: null,
     })
     inputRef.current.focus()
   }
@@ -103,9 +68,9 @@ const Popup = () => {
         <div className='ellipsis activetab-url'>{activeTab.url}</div>
 
         <div className='qrcode-container'>
-          <img className='qrcode' src={activeTab.urlQrcode ?? qrcodePlaceholder} alt={activeTab.url} />
+          <QRCodeComp className='qrcode' text={activeTab.url} />
           <div className='space'></div>
-          <img className="qrcode" src={inputQrcode.qrcode ?? qrcodePlaceholder} alt={inputQrcode.input} ></img>
+          <QRCodeComp className='qrcode' text={inputQrcode.input}></QRCodeComp>
         </div>
 
         <div className='mt8'>
