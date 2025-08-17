@@ -17,3 +17,8 @@ Chrome 扩展，将标签地址生成二维码，输入文本生成二维码，�
 开发框架:
 
 - [Chrome Extension Boilerplate React v5.0.4](https://github.com/lxieyang/chrome-extension-boilerplate-react)
+
+
+## 其他
+
+Rsbuild版本：[qrcode-generator-rsbuild](https://github.com/buyili/qrcode-generator-rsbuild)
