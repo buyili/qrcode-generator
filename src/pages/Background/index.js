@@ -73,7 +73,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
  */
 chrome.tabs.onCreated.addListener((tab) => {
     console.log("🚀 ~ chrome.tabs.onCreated.addListener ~ tab:", tab)
-    blockNewWindowAD(tab)
+    blockAdTabByHeight(tab)
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -87,16 +87,22 @@ chrome.windows.onCreated.addListener((window) => {
     }
 })
 
-/**
- * 拦截在新建窗口中打开的广告
- * @param {chrome.tabs.Tab} tab 
- */
-function blockNewWindowAD(tab) {
+
+function blockAdTabByHeight(tab) {
     // 判断 newWindowAD 方式一：窗口高度等于 99
-    if (tab.height == 99) {
+    if (tab.height == 99 && tab.id) {
         chrome.tabs.remove(tab.id);
         return
     }
+}
+
+/**
+ * 拦截在新建窗口中打开的广告
+ * 
+ * @deprecated 在历史记录中一键恢复多个标签页时，会误判，只能恢复两个标签页
+ * @param {chrome.tabs.Tab} tab 
+ */
+function blockNewWindowAD(tab) {
     // 判断 newWindowAD 方式二：新建窗口时 tab.pendingUrl 属性值为空。
     // 注意：这只适用于 chrome.tabs.onCreated 事件，不适用于 chrome.tabs.onUpdated 事件
     // 根据 tab.active 是否为 true 区分广告。例如第三方网站(如 x.com)使用google账号登录时，弹窗标签信息中 tab.active = true
